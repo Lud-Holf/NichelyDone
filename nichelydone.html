@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080a12">
+  <meta name="description" content="Nichelydone — five questions. Four rarities. How niche can you get?">
+  <title>nichelydone — find your niche</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080a12;
+      --panel: rgba(17, 21, 37, 0.88);
+      --panel-strong: #111526;
+      --line: rgba(164, 178, 220, 0.16);
+      --text: #f2f5ff;
+      --muted: #959db9;
+      --cyan: #55f6e5;
+      --pink: #ff4bb8;
+      --purple: #a58bff;
+      --yellow: #ffe779;
+      --green: #69f5a5;
+      --danger: #ff7b91;
+      --radius: 20px;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-height: 100%; background: var(--bg); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(ellipse at 15% 8%, rgba(76, 55, 167, 0.21), transparent 37rem),
+        radial-gradient(ellipse at 88% 30%, rgba(0, 180, 168, 0.12), transparent 32rem),
+        linear-gradient(160deg, #0a0c17 0%, #080a12 55%, #0b0c18 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      opacity: 0.11;
+      background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, black, transparent 92%);
+    }
+
+    button, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
+
+    .app-shell {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      width: min(100% - 36px, 1040px);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 26px 0 20px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-height: 48px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(85, 246, 229, 0.74);
+      border-radius: 11px;
+      color: var(--cyan);
+      background: rgba(85, 246, 229, 0.07);
+      box-shadow: inset 0 0 22px rgba(85, 246, 229, 0.08), 0 0 22px rgba(85, 246, 229, 0.07);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: -0.08em;
+    }
+
+    .brand-name { font-size: 14px; font-weight: 850; letter-spacing: 0.13em; text-transform: lowercase; }
+    .brand-subtitle { margin-top: 3px; color: var(--muted); font-size: 9px; font-weight: 750; letter-spacing: 0.19em; text-transform: uppercase; }
+    .topbar-line { height: 1px; flex: 1; margin-left: 20px; background: linear-gradient(90deg, var(--line), transparent); }
+
+    main { display: flex; flex: 1; align-items: center; justify-content: center; padding: 42px 0 54px; }
+    .screen { width: 100%; animation: enter 420ms cubic-bezier(.2,.8,.2,1) both; }
+    .hidden { display: none !important; }
+
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(9px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .intro { max-width: 760px; margin: 0 auto; text-align: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 24px;
+      color: var(--cyan);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before, .eyebrow::after { width: 20px; height: 1px; background: currentColor; content: ""; opacity: 0.65; }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(54px, 10.4vw, 106px);
+      font-weight: 950;
+      line-height: 0.94;
+      letter-spacing: -0.085em;
+      text-transform: lowercase;
+    }
+    .title-first { color: #f5f6ff; text-shadow: 0 0 36px rgba(255,255,255,0.05); }
+    .title-second {
+      color: transparent;
+      background: linear-gradient(94deg, var(--cyan) 3%, #72dfff 38%, var(--purple) 68%, var(--pink) 98%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .intro-copy { max-width: 500px; margin: 25px auto 0; color: #b4bad0; font-size: clamp(15px, 2.1vw, 18px); line-height: 1.75; }
+    .intro-copy strong { color: var(--text); font-weight: 750; }
+    .stat-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 27px 0 34px; }
+    .stat-pill { border: 1px solid var(--line); border-radius: 100px; padding: 8px 12px; background: rgba(255,255,255,0.025); color: #aeb6d0; font-size: 10px; font-weight: 750; letter-spacing: 0.09em; text-transform: uppercase; }
+    .stat-pill span { color: var(--cyan); }
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 50px;
+      border: 1px solid rgba(85, 246, 229, 0.76);
+      border-radius: 12px;
+      padding: 0 23px;
+      color: var(--cyan);
+      background: rgba(85, 246, 229, 0.055);
+      box-shadow: inset 0 0 20px rgba(85, 246, 229, 0.035);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 160ms ease, background 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+    }
+    .btn:hover { color: #071012; background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 28px rgba(85, 246, 229, 0.19); transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+    .btn .arrow { font-size: 18px; line-height: 0.8; transition: transform 160ms ease; }
+    .btn:hover .arrow { transform: translateX(3px); }
+    .btn-secondary { min-height: 42px; border-color: rgba(164,178,220,0.26); color: #c1c8df; background: rgba(255,255,255,0.025); font-size: 10px; }
+    .btn-secondary:hover { border-color: rgba(164,178,220,0.55); color: var(--text); background: rgba(255,255,255,0.08); box-shadow: none; }
+    .btn:disabled { opacity: 0.42; cursor: not-allowed; transform: none; }
+    .start-btn { min-width: 214px; min-height: 58px; }
+    .intro-note { margin-top: 17px; color: #6f7898; font-size: 11px; }
+
+    .game-wrap { max-width: 760px; margin: 0 auto; }
+    .game-meta { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 15px; }
+    .kicker { color: #7883a3; font-size: 10px; font-weight: 850; letter-spacing: 0.17em; text-transform: uppercase; }
+    .round-count { color: var(--text); font-size: 12px; font-weight: 800; letter-spacing: 0.08em; }
+    .round-count span { color: var(--cyan); }
+    .progress-track { height: 4px; margin-bottom: 24px; overflow: hidden; border-radius: 20px; background: rgba(255,255,255,0.07); }
+    .progress-fill { height: 100%; width: 20%; border-radius: inherit; background: linear-gradient(90deg, var(--cyan), var(--purple), var(--pink)); box-shadow: 0 0 15px rgba(85,246,229,0.28); transition: width 260ms ease; }
+
+    .question-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(137, 151, 201, 0.25);
+      border-radius: var(--radius);
+      padding: clamp(23px, 5.5vw, 43px);
+      background: linear-gradient(135deg, rgba(19, 24, 43, 0.97), rgba(13, 16, 30, 0.95));
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.035);
+    }
+    .question-card::before { position: absolute; top: 0; left: 28px; width: 96px; height: 2px; content: ""; background: linear-gradient(90deg, var(--cyan), transparent); }
+    .question-card::after { position: absolute; top: 0; right: 0; width: 110px; height: 110px; border-top: 1px solid rgba(255,75,184,0.16); border-right: 1px solid rgba(255,75,184,0.16); border-radius: 0 var(--radius) 0 90px; content: ""; pointer-events: none; }
+    .question-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+    .category-chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid rgba(165,139,255,0.32); border-radius: 100px; padding: 7px 10px; color: #c3b6ff; background: rgba(165,139,255,0.07); font-size: 9px; font-weight: 850; letter-spacing: 0.13em; text-transform: uppercase; }
+    .category-chip::before { width: 5px; height: 5px; border-radius: 50%; background: var(--purple); box-shadow: 0 0 8px var(--purple); content: ""; }
+    .question-index { color: #67708d; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; }
+    .question-title { max-width: 590px; margin: 25px 0 12px; font-size: clamp(25px, 4.7vw, 38px); font-weight: 850; letter-spacing: -0.045em; line-height: 1.2; }
+    .question-hint { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+    .answer-form { display: flex; gap: 10px; margin-top: 29px; }
+    .answer-input {
+      width: 100%;
+      min-width: 0;
+      height: 54px;
+      border: 1px solid rgba(164,178,220,0.26);
+      border-radius: 11px;
+      padding: 0 16px;
+      color: var(--text);
+      background: rgba(4, 6, 14, 0.58);
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+    .answer-input::placeholder { color: #606984; }
+    .answer-input:focus { border-color: rgba(85,246,229,0.75); box-shadow: 0 0 0 3px rgba(85,246,229,0.07); outline: none; }
+    .answer-input:disabled { opacity: 0.7; }
+    .submit-btn { min-width: 132px; min-height: 54px; }
+    .form-message { min-height: 22px; margin: 11px 1px 0; color: var(--danger); font-size: 12px; line-height: 1.6; }
+    .form-message.success { color: var(--green); }
+    .form-message.neutral { color: #a4acc7; }
+
+    .result-panel { margin-top: 18px; overflow: hidden; border: 1px solid rgba(164,178,220,0.18); border-radius: 15px; background: rgba(5,7,15,0.42); animation: enter 260ms ease both; }
+    .result-panel-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; padding: 17px 19px; border-bottom: 1px solid rgba(164,178,220,0.12); }
+    .result-caption { color: #8c96b5; font-size: 9px; font-weight: 850; letter-spacing: 0.17em; text-transform: uppercase; }
+    .rarity-tag { border: 1px solid currentColor; border-radius: 7px; padding: 6px 9px; font-size: 10px; font-weight: 900; letter-spacing: 0.13em; text-transform: uppercase; }
+    .rarity-basic { color: #96b4ff; background: rgba(116,151,255,0.08); }
+    .rarity-uncommon { color: var(--green); background: rgba(105,245,165,0.07); }
+    .rarity-rare { color: var(--purple); background: rgba(165,139,255,0.08); }
+    .rarity-niche { color: var(--pink); background: rgba(255,75,184,0.08); }
+    .result-panel-body { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 19px; }
+    .result-answer { margin: 0 0 5px; color: var(--text); font-size: 18px; font-weight: 850; overflow-wrap: anywhere; }
+    .result-detail { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .points { flex: 0 0 auto; color: var(--cyan); font-size: 28px; font-weight: 950; letter-spacing: -0.06em; white-space: nowrap; }
+    .points span { display: block; margin-top: 1px; color: #77829e; font-size: 9px; font-weight: 800; letter-spacing: 0.14em; text-align: right; text-transform: uppercase; }
+    .result-actions { display: flex; justify-content: flex-end; padding: 0 19px 19px; }
+    .rarity-guide { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 18px; }
+    .rarity-guide-item { display: flex; flex-direction: column; gap: 6px; border: 1px solid rgba(164,178,220,0.12); border-radius: 10px; padding: 11px 12px; background: rgba(255,255,255,0.018); }
+    .rarity-guide-item b { font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; }
+    .rarity-guide-item span { color: #7f89a5; font-size: 10px; }
+    .rarity-guide-item.basic b { color: #96b4ff; }
+    .rarity-guide-item.uncommon b { color: var(--green); }
+    .rarity-guide-item.rare b { color: var(--purple); }
+    .rarity-guide-item.niche b { color: var(--pink); }
+
+    .finish-wrap { max-width: 800px; margin: 0 auto; }
+    .finish-card { overflow: hidden; border: 1px solid rgba(137,151,201,0.25); border-radius: 22px; background: linear-gradient(145deg, rgba(19,24,43,0.98), rgba(11,13,25,0.98)); box-shadow: var(--shadow); }
+    .finish-hero { position: relative; padding: clamp(28px, 6vw, 48px); text-align: center; }
+    .finish-hero::before { position: absolute; inset: 0 15% auto; height: 1px; background: linear-gradient(90deg, transparent, var(--cyan), var(--pink), transparent); content: ""; }
+    .finish-kicker { color: var(--cyan); font-size: 10px; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; }
+    .finish-score { margin: 17px 0 7px; font-size: clamp(54px, 10vw, 86px); font-weight: 950; letter-spacing: -0.085em; line-height: 1; }
+    .finish-score small { color: #747f9e; font-size: 0.28em; letter-spacing: 0.04em; }
+    .finish-message { margin: 0; font-size: clamp(18px, 3vw, 24px); font-weight: 800; letter-spacing: -0.035em; }
+    .finish-description { max-width: 470px; margin: 12px auto 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .finish-summary { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1px; border-top: 1px solid rgba(164,178,220,0.14); border-bottom: 1px solid rgba(164,178,220,0.14); background: rgba(164,178,220,0.14); }
+    .summary-stat { padding: 18px 10px; background: rgba(12,15,28,0.98); text-align: center; }
+    .summary-stat strong { display: block; color: var(--text); font-size: 20px; font-weight: 900; }
+    .summary-stat span { display: block; margin-top: 5px; color: #7f89a5; font-size: 9px; font-weight: 850; letter-spacing: 0.14em; text-transform: uppercase; }
+    .review-list { display: grid; gap: 8px; padding: 20px clamp(16px, 4vw, 28px) 5px; }
+    .review-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 12px; border: 1px solid rgba(164,178,220,0.11); border-radius: 10px; padding: 12px 13px; background: rgba(255,255,255,0.018); }
+    .review-question { color: #8e98b4; font-size: 10px; line-height: 1.5; }
+    .review-answer { margin-top: 4px; color: var(--text); font-size: 12px; font-weight: 800; overflow-wrap: anywhere; }
+    .review-score { text-align: right; white-space: nowrap; }
+    .review-score strong { display: block; font-size: 13px; }
+    .review-score span { display: block; margin-top: 4px; color: #8994b2; font-size: 9px; text-transform: uppercase; }
+    .finish-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 22px 16px 27px; }
+
+    footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; color: #636d8a; font-size: 10px; }
+    footer .footer-accent { color: #8a94b1; }
+
+    @media (max-width: 560px) {
+      .app-shell { width: min(100% - 26px, 1040px); padding-top: 17px; }
+      main { padding: 35px 0 40px; }
+      .topbar-line { margin-left: 4px; }
+      .intro-copy { max-width: 360px; }
+      .stat-strip { gap: 7px; }
+      .stat-pill { padding: 7px 9px; font-size: 9px; }
+      .answer-form { flex-direction: column; }
+      .submit-btn { width: 100%; }
+      .result-panel-body { align-items: flex-start; }
+      .points { font-size: 25px; }
+      .rarity-guide { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .question-card { border-radius: 16px; }
+      .finish-summary { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .summary-stat strong { font-size: 17px; }
+      footer { justify-content: center; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar" aria-label="nichelydone">
+      <div class="brand-mark" aria-hidden="true">nd.</div>
+      <div>
+        <div class="brand-name">nichelydone</div>
+        <div class="brand-subtitle">the niche arcade</div>
+      </div>
+      <div class="topbar-line" aria-hidden="true"></div>
+    </header>
+
+    <main>
+      <!-- INTRO SCREEN -->
+      <section id="intro-screen" class="screen intro" aria-labelledby="game-title">
+        <div class="eyebrow">A little knowledge. A lot of niche.</div>
+        <h1 id="game-title"><span class="title-first">nichely</span><br><span class="title-second">done.</span></h1>
+        <p class="intro-copy">Five questions. One answer each. <strong>The less obvious your answer, the more it scores.</strong> Think beyond the first thing that comes to mind.</p>
+        <div class="stat-strip" aria-label="Game details">
+          <div class="stat-pill"><span>05</span> questions</div>
+          <div class="stat-pill"><span>04</span> rarities</div>
+          <div class="stat-pill">No account needed</div>
+        </div>
+        <button id="start-button" class="btn start-btn" type="button">Start run <span class="arrow" aria-hidden="true">↗</span></button>
+        <div class="intro-note">Demo build · sample answer bank included</div>
+      </section>
+
+      <!-- GAME SCREEN -->
+      <section id="game-screen" class="screen game-wrap hidden" aria-labelledby="question-title">
+        <div class="game-meta">
+          <div class="kicker">Round in progress <span aria-hidden="true">/</span> Niche check</div>
+          <div class="round-count">QUESTION <span id="round-number">01</span><span style="color:#69728d"> / 05</span></div>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="Game progress" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" id="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+
+        <article class="question-card">
+          <div class="question-top">
+            <span id="category-label" class="category-chip">Culture</span>
+            <span id="question-index" class="question-index">PROMPT 01</span>
+          </div>
+          <h2 id="question-title" class="question-title">Name a famous YouTuber.</h2>
+          <p class="question-hint">Type one answer that fits the prompt. Each question has its own curated demo answer bank.</p>
+
+          <form id="answer-form" class="answer-form" autocomplete="off">
+            <label class="sr-only" for="answer-input">Your answer</label>
+            <input id="answer-input" class="answer-input" name="answer" type="text" placeholder="What's your answer?" maxlength="90" required aria-describedby="form-message">
+            <button id="submit-button" class="btn submit-btn" type="submit">Lock it in <span class="arrow" aria-hidden="true">↗</span></button>
+          </form>
+          <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+
+          <div id="answer-result" class="result-panel hidden" aria-live="polite">
+            <div class="result-panel-top">
+              <span class="result-caption">Answer registered</span>
+              <span id="rarity-tag" class="rarity-tag rarity-basic">Basic</span>
+            </div>
+            <div class="result-panel-body">
+              <div>
+                <p id="result-answer" class="result-answer">MrBeast</p>
+                <p id="result-detail" class="result-detail">A familiar pick · weight 270 / 1000</p>
+              </div>
+              <div id="result-points" class="points">+100<span>points</span></div>
+            </div>
+            <div class="result-actions">
+              <button id="continue-button" class="btn" type="button">Next question <span class="arrow" aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </article>
+
+        <div class="rarity-guide" aria-label="Rarity and points guide">
+          <div class="rarity-guide-item basic"><b>Basic</b><span>100 points</span></div>
+          <div class="rarity-guide-item uncommon"><b>Uncommon</b><span>200 points</span></div>
+          <div class="rarity-guide-item rare"><b>Rare</b><span>350 points</span></div>
+          <div class="rarity-guide-item niche"><b>Niche</b><span>500 points</span></div>
+        </div>
+      </section>
+
+      <!-- RESULTS SCREEN -->
+      <section id="results-screen" class="screen finish-wrap hidden" aria-labelledby="finish-title">
+        <div class="finish-card">
+          <div class="finish-hero">
+            <div class="finish-kicker">Run complete · niche report</div>
+            <div id="final-score" class="finish-score">0 <small>/ 2500</small></div>
+            <h2 id="finish-title" class="finish-message">Let's see how niche you got.</h2>
+            <p id="finish-description" class="finish-description">Every answer tells a story. Here's how this run went.</p>
+          </div>
+          <div class="finish-summary">
+            <div class="summary-stat"><strong id="stat-correct">0/5</strong><span>Accepted</span></div>
+            <div class="summary-stat"><strong id="stat-rare">0</strong><span>Rare + niche</span></div>
+            <div class="summary-stat"><strong id="stat-best">—</strong><span>Best rarity</span></div>
+          </div>
+          <div id="review-list" class="review-list" aria-label="Round review"></div>
+          <div class="finish-actions">
+            <button id="play-again-button" class="btn" type="button">Play again <span class="arrow" aria-hidden="true">↻</span></button>
+            <button id="home-button" class="btn btn-secondary" type="button">Back to title</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>NICHELYDONE <span class="footer-accent">/</span> DEMO EDITION</span>
+      <span>Curiosity is common. <span class="footer-accent">Your answers don't have to be.</span></span>
+    </footer>
+  </div>
+
+  <script>
+    "use strict";
+
+    /* =====================================================================
+       EASY-EDIT DEMO DATABASE
+       ---------------------------------------------------------------------
+       Add/edit questions here. Each question should have:
+         - id: a unique string
+         - category: short category label shown above the prompt
+         - prompt: the question shown to players
+         - answers: all accepted answers for this demo question
+
+       Every answer has:
+         - text: the canonical answer shown in the results
+         - aliases: alternate spellings/names players may type (optional)
+         - weight: a number representing the answer's share out of 1000
+
+       IMPORTANT: weights for each question should total exactly 1000.
+       Bigger weight = more common/basic. Smaller weight = more niche.
+       Rarity thresholds and point values are configured in RARITY_TIERS below.
+       This is a client-side demo bank, not a real-world exhaustive validator.
+       ===================================================================== */
+
+    const DEMO_QUESTIONS = [
+      {
+        id: "youtuber",
+        category: "Internet culture",
+        prompt: "Name a famous YouTuber.",
+        answers: [
+          { text: "MrBeast", aliases: ["Mr Beast", "Jimmy Donaldson"], weight: 270 },
+          { text: "PewDiePie", aliases: ["Felix Kjellberg"], weight: 190 },
+          { text: "Markiplier", aliases: ["Mark Fischbach"], weight: 150 },
+          { text: "Jacksepticeye", aliases: ["Seán McLoughlin", "Sean McLoughlin"], weight: 120 },
+          { text: "Dream", aliases: ["DreamWasTaken"], weight: 90 },
+          { text: "CoryxKenshin", aliases: ["Cory Kenshin"], weight: 70 },
+          { text: "TommyInnit", aliases: ["Tommyinnit"], weight: 55 },
+          { text: "Ludwig", aliases: ["Ludwig Ahgren"], weight: 30 },
+          { text: "DanTDM", aliases: ["Dan TDM", "Daniel Middleton"], weight: 25 }
+        ]
+      },
+      {
+        id: "color",
+        category: "Colour wheel",
+        prompt: "Name a colour.",
+        answers: [
+          { text: "Blue", aliases: ["Navy blue", "Sky blue"], weight: 250 },
+          { text: "Red", aliases: ["Crimson"], weight: 180 },
+          { text: "Green", aliases: ["Forest green", "Lime green"], weight: 130 },
+          { text: "Yellow", aliases: ["Canary yellow"], weight: 110 },
+          { text: "Purple", aliases: ["Violet"], weight: 100 },
+          { text: "Orange", aliases: ["Tangerine"], weight: 80 },
+          { text: "Cyan", aliases: ["Aqua"], weight: 60 },
+          { text: "Magenta", aliases: ["Fuchsia"], weight: 40 },
+          { text: "Teal", aliases: [], weight: 30 },
+          { text: "Chartreuse", aliases: [], weight: 20 }
+        ]
+      },
+      {
+        id: "billboard-song",
+        category: "Music charts",
+        prompt: "Name a song that has appeared on the Billboard Hot 100.",
+        answers: [
+          { text: "Blinding Lights", aliases: ["The Weeknd Blinding Lights"], weight: 250 },
+          { text: "Shape of You", aliases: ["Ed Sheeran Shape of You"], weight: 180 },
+          { text: "Bad Guy", aliases: ["bad guy", "Billie Eilish Bad Guy"], weight: 140 },
+          { text: "Old Town Road", aliases: ["Lil Nas X Old Town Road"], weight: 120 },
+          { text: "Flowers", aliases: ["Miley Cyrus Flowers"], weight: 100 },
+          { text: "Levitating", aliases: ["Dua Lipa Levitating"], weight: 80 },
+          { text: "Good 4 U", aliases: ["Good for You", "good 4 u"], weight: 60 },
+          { text: "Take On Me", aliases: ["a-ha Take On Me", "Take on me"], weight: 46 },
+          { text: "Drivers License", aliases: ["Drivers Licence", "driver's license", "drivers license"], weight: 24 }
+        ]
+      },
+      {
+        id: "animal",
+        category: "Animal kingdom",
+        prompt: "Name an animal.",
+        answers: [
+          { text: "Dog", aliases: ["Dogs", "Puppy"], weight: 250 },
+          { text: "Cat", aliases: ["Cats", "Kitten"], weight: 200 },
+          { text: "Elephant", aliases: [], weight: 150 },
+          { text: "Giraffe", aliases: [], weight: 120 },
+          { text: "Axolotl", aliases: [], weight: 100 },
+          { text: "Pangolin", aliases: [], weight: 70 },
+          { text: "Okapi", aliases: [], weight: 50 },
+          { text: "Quokka", aliases: [], weight: 36 },
+          { text: "Saiga antelope", aliases: ["Saiga"], weight: 24 }
+        ]
+      },
+      {
+        id: "country",
+        category: "World atlas",
+        prompt: "Name a country.",
+        answers: [
+          { text: "United States", aliases: ["USA", "US", "United States of America", "America"], weight: 250 },
+          { text: "United Kingdom", aliases: ["UK", "Britain", "Great Britain"], weight: 200 },
+          { text: "Canada", aliases: [], weight: 150 },
+          { text: "Japan", aliases: [], weight: 120 },
+          { text: "Brazil", aliases: ["Brasil"], weight: 100 },
+          { text: "Iceland", aliases: [], weight: 70 },
+          { text: "Bhutan", aliases: [], weight: 50 },
+          { text: "Tuvalu", aliases: [], weight: 36 },
+          { text: "Eswatini", aliases: ["Swaziland"], weight: 24 }
+        ]
+      },
+      {
+        id: "pizza-topping",
+        category: "Food debates",
+        prompt: "Name a pizza topping.",
+        answers: [
+          { text: "Pepperoni", aliases: [], weight: 250 },
+          { text: "Cheese", aliases: ["Extra cheese", "Mozzarella"], weight: 200 },
+          { text: "Mushroom", aliases: ["Mushrooms"], weight: 150 },
+          { text: "Olives", aliases: ["Olive", "Black olives"], weight: 120 },
+          { text: "Pineapple", aliases: [], weight: 100 },
+          { text: "Anchovies", aliases: ["Anchovy"], weight: 70 },
+          { text: "Artichoke", aliases: ["Artichokes"], weight: 50 },
+          { text: "Jalapeño", aliases: ["Jalapeno", "Jalapenos"], weight: 36 },
+          { text: "Nduja", aliases: ["'Nduja"], weight: 24 }
+        ]
+      },
+      {
+        id: "video-game",
+        category: "Gaming",
+        prompt: "Name a video game.",
+        answers: [
+          { text: "Minecraft", aliases: [], weight: 250 },
+          { text: "Fortnite", aliases: [], weight: 200 },
+          { text: "Roblox", aliases: [], weight: 150 },
+          { text: "Mario Kart", aliases: ["Mario Kart 8", "Mario Kart 8 Deluxe"], weight: 120 },
+          { text: "Stardew Valley", aliases: [], weight: 100 },
+          { text: "Hollow Knight", aliases: [], weight: 70 },
+          { text: "Celeste", aliases: [], weight: 50 },
+          { text: "Outer Wilds", aliases: [], weight: 36 },
+          { text: "Tunic", aliases: [], weight: 24 }
+        ]
+      },
+      {
+        id: "movie",
+        category: "Film shelf",
+        prompt: "Name a movie.",
+        answers: [
+          { text: "Titanic", aliases: [], weight: 250 },
+          { text: "The Lion King", aliases: ["Lion King"], weight: 200 },
+          { text: "Jurassic Park", aliases: [], weight: 150 },
+          { text: "Spirited Away", aliases: [], weight: 120 },
+          { text: "Parasite", aliases: [], weight: 100 },
+          { text: "Moonlight", aliases: [], weight: 70 },
+          { text: "Arrival", aliases: [], weight: 50 },
+          { text: "The Grand Budapest Hotel", aliases: ["Grand Budapest Hotel"], weight: 36 },
+          { text: "Perfect Blue", aliases: [], weight: 24 }
+        ]
+      },
+      {
+        id: "sport",
+        category: "On the scoreboard",
+        prompt: "Name a sport.",
+        answers: [
+          { text: "Football", aliases: ["Soccer", "Association football"], weight: 250 },
+          { text: "Basketball", aliases: [], weight: 200 },
+          { text: "Tennis", aliases: [], weight: 150 },
+          { text: "Cricket", aliases: [], weight: 120 },
+          { text: "Volleyball", aliases: [], weight: 100 },
+          { text: "Fencing", aliases: [], weight: 70 },
+          { text: "Badminton", aliases: [], weight: 50 },
+          { text: "Curling", aliases: [], weight: 36 },
+          { text: "Sepak takraw", aliases: ["Sepak Takraw"], weight: 24 }
+        ]
+      },
+      {
+        id: "food",
+        category: "Around the table",
+        prompt: "Name a food.",
+        answers: [
+          { text: "Pizza", aliases: [], weight: 250 },
+          { text: "Sushi", aliases: [], weight: 200 },
+          { text: "Tacos", aliases: ["Taco"], weight: 150 },
+          { text: "Curry", aliases: [], weight: 120 },
+          { text: "Falafel", aliases: [], weight: 100 },
+          { text: "Kimchi", aliases: [], weight: 70 },
+          { text: "Bibimbap", aliases: [], weight: 50 },
+          { text: "Okonomiyaki", aliases: [], weight: 36 },
+          { text: "Injera", aliases: [], weight: 24 }
+        ]
+      }
+    ];
+
+    /* A high answer weight means a more common answer and therefore a lower tier. */
+    const RARITY_TIERS = [
+      { id: "basic", label: "Basic", minWeight: 180, points: 100, message: "A familiar pick." },
+      { id: "uncommon", label: "Uncommon", minWeight: 80, points: 200, message: "A little less expected." },
+      { id: "rare", label: "Rare", minWeight: 30, points: 350, message: "Nice one — that's a rarer pick." },
+      { id: "niche", label: "Niche", minWeight: 0, points: 500, message: "Deep cut. That's properly niche." }
+    ];
+
+    const GAME_LENGTH = 5;
+    const MAX_SCORE = GAME_LENGTH * Math.max(...RARITY_TIERS.map((tier) => tier.points));
+
+    // Audio is optional. Place the matching MP3 files in ./sounds/ to enable it.
+    const AUDIO_FILES = {
+      click: "./sounds/click.mp3",
+      basic: "./sounds/basic.mp3",
+      uncommon: "./sounds/uncommon.mp3",
+      rare: "./sounds/rare.mp3",
+      niche: "./sounds/niche.mp3"
+    };
+    const audio = Object.fromEntries(Object.entries(AUDIO_FILES).map(([name, path]) => {
+      const clip = new Audio(path);
+      clip.preload = "auto";
+      clip.volume = 0.68;
+      return [name, clip];
+    }));
+
+    const screens = {
+      intro: document.getElementById("intro-screen"),
+      game: document.getElementById("game-screen"),
+      results: document.getElementById("results-screen")
+    };
+    const $ = (id) => document.getElementById(id);
+
+    let roundQuestions = [];
+    let roundIndex = 0;
+    let score = 0;
+    let history = [];
+    let roundLocked = false;
+
+    function playSound(name) {
+      const clip = audio[name];
+      if (!clip) return;
+      try {
+        clip.currentTime = 0;
+        const playback = clip.play();
+        if (playback && typeof playback.catch === "function") playback.catch(() => {
+          // Sound files are optional; missing files or browser audio restrictions should not break play.
+        });
+      } catch (_error) {
+        // Keep gameplay usable if audio isn't available.
+      }
+    }
+
+    // Play the click sound for all buttons, including buttons rendered by game state.
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (button && !button.disabled) playSound("click");
+    });
+
+    function showScreen(screenName) {
+      Object.entries(screens).forEach(([name, element]) => {
+        element.classList.toggle("hidden", name !== screenName);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function normalizeAnswer(value) {
+      return String(value)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/&/g, " and ")
+        .replace(/[’‘`']/g, "")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim()
+        .replace(/\s+/g, " ");
+    }
+
+    function getTier(weight) {
+      return RARITY_TIERS.find((tier) => weight >= tier.minWeight) || RARITY_TIERS[RARITY_TIERS.length - 1];
+    }
+
+    function findAnswer(question, playerInput) {
+      const guess = normalizeAnswer(playerInput);
+      if (!guess) return null;
+      return question.answers.find((answer) => {
+        const accepted = [answer.text, ...(answer.aliases || [])];
+        return accepted.some((candidate) => normalizeAnswer(candidate) === guess);
+      }) || null;
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function startGame() {
+      // The game uses five different prompts selected at random from the ten-question demo bank.
+      roundQuestions = shuffle(DEMO_QUESTIONS).slice(0, GAME_LENGTH);
+      roundIndex = 0;
+      score = 0;
+      history = [];
+      roundLocked = false;
+      showScreen("game");
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const question = roundQuestions[roundIndex];
+      roundLocked = false;
+      $("round-number").textContent = String(roundIndex + 1).padStart(2, "0");
+      $("question-index").textContent = `PROMPT ${String(roundIndex + 1).padStart(2, "0")}`;
+      $("category-label").textContent = question.category;
+      $("question-title").textContent = question.prompt;
+      $("answer-input").value = "";
+      $("answer-input").disabled = false;
+      $("submit-button").disabled = false;
+      $("form-message").textContent = "";
+      $("form-message").className = "form-message";
+      $("answer-result").classList.add("hidden");
+      $("continue-button").innerHTML = roundIndex === GAME_LENGTH - 1
+        ? 'View results <span class="arrow" aria-hidden="true">→</span>'
+        : 'Next question <span class="arrow" aria-hidden="true">→</span>';
+      const progress = (roundIndex / GAME_LENGTH) * 100;
+      $("progress-fill").style.width = `${progress}%`;
+      $("progress-bar").setAttribute("aria-valuenow", String(roundIndex));
+      window.setTimeout(() => $("answer-input").focus({ preventScroll: true }), 80);
+    }
+
+    function registerAnswer(answer, playerInput) {
+      const question = roundQuestions[roundIndex];
+      const tier = getTier(answer.weight);
+      const result = {
+        questionId: question.id,
+        prompt: question.prompt,
+        category: question.category,
+        answer: answer.text,
+        playerInput,
+        weight: answer.weight,
+        tier: tier.id,
+        tierLabel: tier.label,
+        points: tier.points,
+        skipped: false
+      };
+      history.push(result);
+      score += tier.points;
+      showAnswerResult(result, tier);
+      playSound(tier.id);
+    }
+
+    function showAnswerResult(result, tier) {
+      roundLocked = true;
+      $("answer-input").disabled = true;
+      $("submit-button").disabled = true;
+      $("form-message").textContent = "Answer locked. Rarity revealed.";
+      $("form-message").className = "form-message success";
+      $("answer-result").classList.remove("hidden");
+      $("rarity-tag").className = `rarity-tag rarity-${tier.id}`;
+      $("rarity-tag").textContent = tier.label;
+      $("result-answer").textContent = result.answer;
+      $("result-detail").textContent = `${tier.message} Answer weight: ${result.weight} / 1000.`;
+      $("result-points").innerHTML = `+${result.points}<span>points</span>`;
+      $("continue-button").focus({ preventScroll: true });
+    }
+
+    function handleSubmit(event) {
+      event.preventDefault();
+      if (roundLocked) return;
+      const playerInput = $("answer-input").value.trim();
+      if (!playerInput) {
+        $("form-message").textContent = "Type an answer first, then lock it in.";
+        $("form-message").className = "form-message";
+        $("answer-input").focus();
+        return;
+      }
+
+      const question = roundQuestions[roundIndex];
+      const answer = findAnswer(question, playerInput);
+      if (!answer) {
+        $("form-message").textContent = "That answer isn't in this demo bank. Try another, or add it to DEMO_QUESTIONS in the code.";
+        $("form-message").className = "form-message";
+        $("answer-input").select();
+        return;
+      }
+      registerAnswer(answer, playerInput);
+    }
+
+    function skipQuestion() {
+      if (roundLocked) return;
+      const question = roundQuestions[roundIndex];
+      history.push({
+        questionId: question.id,
+        prompt: question.prompt,
+        category: question.category,
+        answer: "Skipped",
+        playerInput: "",
+        weight: null,
+        tier: null,
+        tierLabel: "Skipped",
+        points: 0,
+        skipped: true
+      });
+      roundLocked = true;
+      $("answer-input").disabled = true;
+      $("submit-button").disabled = true;
+      $("form-message").textContent = "No answer submitted. This round scores zero.";
+      $("form-message").className = "form-message neutral";
+      $("answer-result").classList.remove("hidden");
+      $("rarity-tag").className = "rarity-tag";
+      $("rarity-tag").textContent = "Skipped";
+      $("result-answer").textContent = "No points this round";
+      $("result-detail").textContent = "You can still keep going — five questions make one run.";
+      $("result-points").innerHTML = "+0<span>points</span>";
+      $("continue-button").focus({ preventScroll: true });
+    }
+
+    function nextQuestion() {
+      if (!roundLocked) return;
+      if (roundIndex < GAME_LENGTH - 1) {
+        roundIndex += 1;
+        renderQuestion();
+      } else {
+        finishGame();
+      }
+    }
+
+    function feedbackForScore(finalScore) {
+      if (finalScore <= 500) return { title: "I think you can do better...", description: "The obvious answers are a starting point. Next run, dig a little deeper and see what you find." };
+      if (finalScore <= 900) return { title: "A decent little niche hunt.", description: "You're getting there. Try looking past the first answer that pops into your head." };
+      if (finalScore <= 1300) return { title: "Okay, you know a few things.", description: "A balanced run with a few unexpected picks. There's still a deeper niche to explore." };
+      if (finalScore <= 1800) return { title: "Well done — that's pretty niche.", description: "You got past the obvious answers and found some good deep cuts." };
+      return { title: "Well done! That's totally niche.", description: "Serious niche energy. You made some wonderfully unexpected picks." };
+    }
+
+    function finishGame() {
+      $("progress-fill").style.width = "100%";
+      $("progress-bar").setAttribute("aria-valuenow", String(GAME_LENGTH));
+      const feedback = feedbackForScore(score);
+      const accepted = history.filter((entry) => !entry.skipped).length;
+      const rarePlus = history.filter((entry) => entry.tier === "rare" || entry.tier === "niche").length;
+      const tierOrder = { basic: 1, uncommon: 2, rare: 3, niche: 4 };
+      const best = history.filter((entry) => entry.tier).sort((a, b) => tierOrder[b.tier] - tierOrder[a.tier])[0];
+
+      $("final-score").innerHTML = `${score.toLocaleString()} <small>/ ${MAX_SCORE.toLocaleString()}</small>`;
+      $("finish-title").textContent = feedback.title;
+      $("finish-description").textContent = feedback.description;
+      $("stat-correct").textContent = `${accepted}/${GAME_LENGTH}`;
+      $("stat-rare").textContent = String(rarePlus);
+      $("stat-best").textContent = best ? best.tierLabel : "—";
+      $("review-list").replaceChildren();
+
+      history.forEach((entry) => {
+        const row = document.createElement("div");
+        row.className = "review-row";
+        const left = document.createElement("div");
+        const prompt = document.createElement("div");
+        prompt.className = "review-question";
+        prompt.textContent = entry.prompt;
+        const answer = document.createElement("div");
+        answer.className = "review-answer";
+        answer.textContent = entry.answer;
+        left.append(prompt, answer);
+
+        const right = document.createElement("div");
+        right.className = "review-score";
+        const points = document.createElement("strong");
+        points.textContent = `+${entry.points}`;
+        const tier = document.createElement("span");
+        tier.textContent = entry.tierLabel;
+        right.append(points, tier);
+        row.append(left, right);
+        $("review-list").append(row);
+      });
+
+      showScreen("results");
+    }
+
+    function returnHome() {
+      showScreen("intro");
+    }
+
+    // Helpful development check: a warning in the console points out an incomplete weight set.
+    DEMO_QUESTIONS.forEach((question) => {
+      const totalWeight = question.answers.reduce((sum, answer) => sum + answer.weight, 0);
+      if (totalWeight !== 1000) {
+        console.warn(`Question "${question.id}" weights total ${totalWeight}, not 1000.`);
+      }
+    });
+
+    $("start-button").addEventListener("click", startGame);
+    $("answer-form").addEventListener("submit", handleSubmit);
+    $("continue-button").addEventListener("click", nextQuestion);
+    $("play-again-button").addEventListener("click", startGame);
+    $("home-button").addEventListener("click", returnHome);
+  </script>
+</body>
+</html>
